@@ -22,7 +22,7 @@ const instagram = {
 
         let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
 
-        await console.log(loginButton[0]);
+        // await console.log(loginButton[0]);
 
         /* Klicke Login */
         await loginButton[0].click();
@@ -37,6 +37,14 @@ const instagram = {
         loginButton = await instagram.page.$x('//div[contains(text(), "Anmelden")]');
         await loginButton[0].click();
 
+        await instagram.page.waitFor(2000);
+
+
+        let notNowClick;
+        while (notNowClick === undefined || notNowClick.length === 0) {
+                notNowClick = await instagram.page.$x('//button[contains(text(), "Jetzt nicht")]');
+        }
+        await notNowClick[0].click();
     }
 
 
