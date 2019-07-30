@@ -1,4 +1,5 @@
-const instaPuppet = require('./instagram');
+
+const instaPuppet = require('./Bot/instagram');
 
 
 (async () => {
@@ -7,6 +8,10 @@ const instaPuppet = require('./instagram');
 
     await instaPuppet.login('brodwolfsky', 'trinacria');
 
-    debugger;
+    await instaPuppet.openByTagAndLike(['java', 'javascript', 'ES6'], 3);
 
+    await instaPuppet.closeBrowser();
+
+    console.log("Insta Bot ist fertig!")
 })();
+
