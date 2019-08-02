@@ -15,14 +15,23 @@ firebase.initializeApp(firebaseConfig);
 
 // console.log(firebase)
 let database = firebase.database();
-let ref = database.ref('likedPost');
+// let ref = database.ref('likedPost');
 
 
-let like = async (post, tag) => ref.push({
-    url: post,
-    tag: tag,
-    date: (new Date()).toLocaleDateString('de-DE')
-});
+let like = async (post, tag, username) => {
+    database.ref('likedPost/' + username)
+        .ref.push({
+        url: post,
+        tag: tag,
+        date: (new Date()).toLocaleDateString('de-DE')
+    })
+}
+
+// let like = async (post, tag, username) => ref.push({
+//     url: post,
+//     tag: tag,
+//     date: (new Date()).toLocaleDateString('de-DE')
+// });
 
 
 module.exports = {

@@ -51,8 +51,8 @@ app.post('/submit', urlencodedParser , (req, res) => {
     tags = tags.map(e => e.replace(/\s/g, ""));
     console.log(tags)
 
-    startTheBot(req.body.login, req.body.password, tags, req.body.amount).then(result => {
-        console.log(result)
+    startTheBot(req.body.login, req.body.password, tags, req.body.amount).then(() => {
+        console.log("OUT!")
     });
     res.send('Hallo, ' + req.body.login + " dein Instagram-Bot ist jetzt gestartet! \n Die Posts unter den Tag(s): " + tags + " werden nun jeweils " + req.body.amount + "-mal angeschaut und geliket.")
 });
@@ -65,10 +65,9 @@ async function startTheBot(login, pw, tags, amount) {
 
     await instaPuppet.login(login, pw);
 
-    await instaPuppet.openByTagAndLike(tags, Number(amount));
+    await instaPuppet.openByTagAndLike(tags, Number(amount), login);
 
     await instaPuppet.closeBrowser();
 
-
-    console.log("Insta Bot ist fertig!")
+    console.log("END Bot")
 }

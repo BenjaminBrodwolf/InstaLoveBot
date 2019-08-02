@@ -63,7 +63,7 @@ const instagram = {
          */
     },
 
-    openByTagAndLike: async (tagList, amount) => {
+    openByTagAndLike: async (tagList, amount, username) => {
 
         for (let tag of tagList) {
 
@@ -82,7 +82,7 @@ const instagram = {
                 /* Warte bis Post geladen */
                 await instagram.page.waitFor('span[id="react-root"][aria-hidden="true"]');
                 await instagram.page.waitFor(1000);
-                console.log("Watched " + tag + " Post Nr." + i + " of " + amount)
+                console.log("Watched Post with Tag: <" + tag + "> Nr." + i + " of " + amount)
 
 
                 let isLikeable = await instagram.page.$(puppeteerConfig.selectors.post_heart_grey); //('span[aria-label="Gefällt mir"]');
@@ -93,7 +93,7 @@ const instagram = {
 
                     let likedPostURL = await instagram.page.url(); //.$('a.c-Yi7')
 
-                    await firebase_db.like(likedPostURL, tag)
+                    await firebase_db.like(likedPostURL, tag, username)
                         .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message))
 
                     await instagram.page.waitFor(10000 + Math.floor(Math.random() * 500));// wait for random amount of time.
@@ -111,7 +111,7 @@ const instagram = {
     },
 
     closeBrowser: async () => {
-        console.log("Program end! Browser get closed.");
+        console.log("Browser get closed.");
 
         await instagram.browser.close();
 
