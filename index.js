@@ -30,9 +30,13 @@ server.listen(8081, function(){
 (async () => {
     const browser = await puppeteer.launch({
         executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-        headless: false
+        headless: false,
+    defaultViewport: null
+
     })
     const page = await browser.newPage()
+    await page.setViewport({ width: 1366, height: 768});
+
     await page.goto("http://localhost:" + port, {
         waitUntil: 'networkidle2'
     });
