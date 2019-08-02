@@ -17,6 +17,7 @@ const instagram = {
     openInstagram: async () => {
         console.log("initialize")
         instagram.browser = await puppeteer.launch({
+            executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             headless: false,
             args: ['--no-sandbox']
         });
@@ -81,7 +82,7 @@ const instagram = {
                 /* Warte bis Post geladen */
                 await instagram.page.waitFor('span[id="react-root"][aria-hidden="true"]');
                 await instagram.page.waitFor(1000);
-                console.log("Watched Post Nr." + i + " of " + amount)
+                console.log("Watched " + tag + " Post Nr." + i + " of " + amount)
 
 
                 let isLikeable = await instagram.page.$(puppeteerConfig.selectors.post_heart_grey); //('span[aria-label="Gefällt mir"]');

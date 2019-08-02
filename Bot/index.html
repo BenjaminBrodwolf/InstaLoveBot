@@ -4,10 +4,48 @@
     <meta charset="UTF-8">
     <title>Insta Bot</title>
     <!--    <script src="startBot.js"></script>-->
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<h1>Insta Bot</h1>
-<button id="startButton">Start Click</button>
+<h1>Instagram Bot</h1>
+
+<form action="/submit" method="post">
+    <fieldset>
+        <legend> Dein Instagram-Login</legend>
+    <div class="input">
+        <label for="login">Login</label>
+        <input type="text" id="login" name="login" placeholder="Benutzername">
+    </div>
+    <div class="input">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password ">
+    </div>
+    </fieldset>
+
+    <fieldset>
+        <legend> Instagram-Bot Einstellungen</legend>
+    <div class="input">
+        <label for="tags">Tag (wenn mehrere trenne mit Komma <strong>,</strong>)</label>
+        <input type="text" id="tags" name="tags" placeholder="zB. Yoga, Vinyasa, Hanuman">
+    </div>
+    <div class="input">
+        <label for="amount">Wie viele Posts pro Tags sollen gelikt werden</label>
+        <input type="number" id="amount" name="amount" min="1" max="10000" value="1">
+    </div>
+    <button type="submit" value="1">Starte den Instagram Bot</button>
+    </fieldset>
+</form>
+
+<h3> HINWEIS </h3>
+<p> Beim Starten des Bots wird ein neues Fenster geöffnet. <br>
+    Kontrolliere ob das Login funktioniert hat und gebe wenn nötig die zusätzliche Authentifizierung ein (ist je Account unterschiedlich). <br>
+    Die ganze Prozedur wird automatisch Gesteuert und hat künstliche "Warten-Zeiten", damit es den Instagram-Benutzer imitiert und nicht als Bot erkannt wird. <br>
+</p>
+<h2> <strong> Also bitte nichts Anklicken! 😄 </strong></h2>
 </body>
 <script>
     const button = document.getElementById('startButton');
