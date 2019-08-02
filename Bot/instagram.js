@@ -71,10 +71,12 @@ const instagram = {
             await instagram.page.waitFor(1000);
 
             let posts = await instagram.page.$$('article > div:nth-child(3) img[decoding="auto"]');
+            await posts[0].click(); // click auf ersten Post
+
 
             for (let i = 0; i < amount; i++) {
 
-                let post = posts[i];
+                let post = await instagram.page.$('a.coreSpriteRightPaginationArrow'); //posts[i];
                 //console.log(post)
 
                 await post.click();
@@ -96,15 +98,14 @@ const instagram = {
                     await firebase_db.like(likedPostURL, tag, username)
                         .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message))
 
-                    await instagram.page.waitFor(10000 + Math.floor(Math.random() * 500));// wait for random amount of time.
                 }
 
 
                 //Closing the current post modal
-                await instagram.page.click(puppeteerConfig.selectors.post_close_button)
-                    .catch((e) => console.log('<<< ERROR CLOSING POST >>> ' + e.message));
+                // await instagram.page.click(puppeteerConfig.selectors.post_close_button)
+                //     .catch((e) => console.log('<<< ERROR CLOSING POST >>> ' + e.message));
                 //Wait for random amount of time
-                await instagram.page.waitFor(2250 + Math.floor(Math.random() * 250));
+                await instagram.page.waitFor(2000 + Math.floor(Math.random() * 500));// wait for random amount of time.
 
             }
         }

@@ -19,11 +19,10 @@ let database = firebase.database();
 
 
 let like = async (post, tag, username) => {
-    database.ref('likedPost/' + username)
+    database.ref('likedPost/' + username + "/" + (new Date()).toLocaleDateString('de-DE'))
         .ref.push({
         url: post,
-        tag: tag,
-        date: (new Date()).toLocaleDateString('de-DE')
+        tag: tag
     })
 }
 

@@ -1,4 +1,3 @@
-
 const express = require("express");
 let app = express();
 const http = require('http');
@@ -30,9 +29,7 @@ server.listen(8081, function(){
 (async () => {
     const browser = await puppeteer.launch({
         executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-        headless: false,
-    defaultViewport: null
-
+        headless: false
     })
     const page = await browser.newPage()
     await page.setViewport({ width: 1366, height: 768});
@@ -49,12 +46,12 @@ app.post('/submit', urlencodedParser , (req, res) => {
     // console.log(req.body);
     let tags = req.body.tags.split(",");
     tags = tags.map(e => e.replace(/\s/g, ""));
-    console.log(tags)
+    console.log(tags);
 
     startTheBot(req.body.login, req.body.password, tags, req.body.amount).then(() => {
         console.log("OUT!")
     });
-    res.send('Hallo, ' + req.body.login + " dein Instagram-Bot ist jetzt gestartet! \n Die Posts unter den Tag(s): " + tags + " werden nun jeweils " + req.body.amount + "-mal angeschaut und geliket.")
+    res.send('Hallo, ' + req.body.login + " \n dein Instagram-Bot ist jetzt gestartet! \n Die Posts unter den Tag(s): " + tags + " werden nun jeweils " + req.body.amount + "-mal geliket.")
 });
 
 
