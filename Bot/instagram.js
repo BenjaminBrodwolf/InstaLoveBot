@@ -11,7 +11,6 @@ const puppeteerConfig = require('./config/puppeteer.json');
 const instagram = {
     browser: null,
     page: null,
-    hashtag: null,
 
 
     openInstagram: async () => {
@@ -64,6 +63,8 @@ const instagram = {
     },
 
     openByTagAndLike: async (tagList, amount, username) => {
+        let waitingTime = 0;
+        let postURL;
 
         for (let tag of tagList) {
 
@@ -72,32 +73,64 @@ const instagram = {
 
             let posts = await instagram.page.$$('article > div:nth-child(3) img[decoding="auto"]');
             await posts[0].click(); // click auf ersten Post
+            await instagram.page.waitFor(1000);
 
 
             for (let i = 0; i < amount; i++) {
+                const URL = await instagram.page.url(); //.$('a.c-Yi7')
+                if (!URL.toString().startsWith("https://www.instagram.com/explore/tags/")) {
+                    postURL = URL;
+                }
 
-                let post = await instagram.page.$('a.coreSpriteRightPaginationArrow'); //posts[i];
-                //console.log(post)
-
-                await post.click();
 
                 /* Warte bis Post geladen */
-                await instagram.page.waitFor('span[id="react-root"][aria-hidden="true"]');
+                await instagram.page.waitFor('span[id="react-root"][aria-hidden="true"]')
+                    .catch(async e => {
+                        console.log('<<< ERROR OPENING POST >>> ' + e.message);
+                        await firebase_db.logError(e.message, tag, username)
+                            .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
+                    });
                 await instagram.page.waitFor(1000);
-                console.log("Watched Post with Tag: <" + tag + "> Nr." + i + " of " + amount)
+                console.log("Watching Post with Tag: <" + tag + "> Nr." + (i + 1) + " of " + amount)
+                console.log(postURL);
 
 
-                let isLikeable = await instagram.page.$(puppeteerConfig.selectors.post_heart_grey); //('span[aria-label="Gefällt mir"]');
+                let isLikeable = await instagram.page.$('span.glyphsSpriteHeart__outline__24__grey_9[aria-label="Gefällt mir"]'); //('span[aria-label="Gefällt mir"]');
 
                 if (isLikeable) {
-                    console.log("LIKED")
+                    console.log("LIKE");
                     await instagram.page.click(puppeteerConfig.selectors.post_like_button);//click the like button
 
-                    let likedPostURL = await instagram.page.url(); //.$('a.c-Yi7')
+                    await firebase_db.like(postURL, tag, username)
+                        .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
-                    await firebase_db.like(likedPostURL, tag, username)
-                        .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message))
+                    waitingTime = 20000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
 
+                } else {
+                    console.log("ALREADY LIKED");
+                    i--;
+                    waitingTime = 1000 + Math.floor(Math.random() * 6000);
+                }
+
+
+                console.log("BOT is waiting " + millisToSecond(waitingTime) + " second before next action.");
+                await instagram.page.waitFor(waitingTime);
+
+                /* Selektieren des PAGINATION-ARROW-NEXT */
+                let nextPost = await instagram.page.$('a.coreSpriteRightPaginationArrow'); //posts[i];
+
+                try {
+                    await nextPost.click();
+                } catch (e) {
+                    console.log('<<< ERROR OPEN NEXT POST >>> ' + e.message);
+                    await firebase_db.logError(e.message, tag, username)
+                        .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
+                    console.log("TRY RE-OPEN LAST POST");
+
+                    await instagram.page.goto(TAG_URL(tag), {waitUntil: 'networkidle2'});
+
+                    const postID = postURL.replace('https://www.instagram.com', '');
+                    await findPosts(postID, i)
                 }
 
 
@@ -105,7 +138,6 @@ const instagram = {
                 // await instagram.page.click(puppeteerConfig.selectors.post_close_button)
                 //     .catch((e) => console.log('<<< ERROR CLOSING POST >>> ' + e.message));
                 //Wait for random amount of time
-                await instagram.page.waitFor(2000 + Math.floor(Math.random() * 500));// wait for random amount of time.
 
             }
         }
@@ -119,4 +151,73 @@ const instagram = {
     }
 };
 
+
 module.exports = instagram;
+
+const millisToSecond = millis => ((millis % 60000) / 1000).toFixed(0);
+
+
+const findPosts = async (postID, numberOfPosts) => {
+    let foundPost;
+    let iteration = 0;
+
+    // while (!foundPost) {
+    //
+    //     if (numberOfPosts > 36) {
+    //         await scrollPageDown();
+    //         // waitFor render
+    //         await instagram.page.waitFor(1500);
+    //     }
+    //
+    //     // search for Post with specifig URL
+    //     console.log("Searching for post-ID: " + postID);
+    //
+    //     // let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
+    //
+    //
+    //     iteration++;
+    //     if (iteration > 10) {
+    //         console.log("Post not found! Bot will restart.")
+    //     }
+    // }
+
+    console.log("Searching for post-ID: " + postID);
+    foundPost = await instagram.page.$x(`//a[contains(@href, '${postID}')]`); // $x("a[contains(@href,'/p/B0y7U60gf8g/')]")[0]
+    console.log(foundPost[0]);
+    console.log(foundPost);
+
+    try {
+        await foundPost[0].click();
+
+    } catch (e) {
+        console.log("FOUNDPOST CLICK ERROR " + e.message)
+    }
+};
+
+const scrollPageDown = async () => {
+    window.scrollTo(0, getDocumentDimensions().height);
+    await instagram.page.waitFor(1000);
+};
+
+const getDocumentDimensions = () => {
+    const height = Math.max(
+        document.documentElement.clientHeight,
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight,
+    );
+
+    const width = Math.max(
+        document.documentElement.clientWidth,
+        document.body.scrollWidth,
+        document.documentElement.scrollWidth,
+        document.body.offsetWidth,
+        document.documentElement.offsetWidth,
+    );
+
+    return {
+        height,
+        width,
+    };
+};

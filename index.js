@@ -32,7 +32,7 @@ server.listen(8081, function(){
         headless: false
     })
     const page = await browser.newPage()
-    await page.setViewport({ width: 1366, height: 768});
+    // await page.setViewport({ width: 1366, height: 768});
 
     await page.goto("http://localhost:" + port, {
         waitUntil: 'networkidle2'
@@ -52,6 +52,7 @@ app.post('/submit', urlencodedParser , (req, res) => {
         console.log("OUT!")
     });
     res.send('Hallo, ' + req.body.login + " \n dein Instagram-Bot ist jetzt gestartet! \n Die Posts unter den Tag(s): " + tags + " werden nun jeweils " + req.body.amount + "-mal geliket.")
+
 });
 
 

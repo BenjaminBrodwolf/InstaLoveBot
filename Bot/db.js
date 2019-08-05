@@ -14,17 +14,24 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // console.log(firebase)
-let database = firebase.database();
+const database = firebase.database();
 // let ref = database.ref('likedPost');
 
 
-let like = async (post, tag, username) => {
-    database.ref('likedPost/' + username + "/" + (new Date()).toLocaleDateString('de-DE'))
+const like = async (post, tag, username) => {
+    database.ref('likedPost/' + username + "/" + (new Date()).toLocaleDateString('de-DE') + "/" + tag)
         .ref.push({
-        url: post,
-        tag: tag
+        post: post
     })
-}
+};
+
+const logError = async (errorMessage, tag, username) => {
+    database.ref('errorLog/' + username + "/" + (new Date()).toLocaleDateString('de-DE') + "/" + errorMessage)
+        .ref.push({
+        error: errorMessage
+    })
+};
+
 
 // let like = async (post, tag, username) => ref.push({
 //     url: post,
@@ -34,5 +41,6 @@ let like = async (post, tag, username) => {
 
 
 module.exports = {
-    like
+    like,
+    logError
 };
