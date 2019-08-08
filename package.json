@@ -2,10 +2,10 @@
   "name": "instabot",
   "version": "1.0.0",
   "description": "Ein Instagram Bot der Post liken tut",
-  "main": "index.js",
+  "main": "electronstart.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "electron ."
   },
   "keywords": [],
   "author": "Beni B.",
@@ -16,5 +16,8 @@
     "firebase": "^6.3.3",
     "firebase-admin": "^6.1.0",
     "puppeteer": "^1.18.1"
+  },
+  "devDependencies": {
+    "electron": "^6.0.1"
   }
 }

@@ -1,11 +1,33 @@
+"use strict";
+
+function clicked() {
+    console.log("cklicked")
+    startTheBot()
+
+}
+document.getElementById("btnClick").addEventListener ("click", () => clicked());
+
+async function startTheBot(login, pw, tags, amount) {
+    console.log("START Bot");
+
+
+    await instagram.openInstagram();
+    //
+    await instagram.login("brodwolfsky", "trinacria");
+    //
+    await instagram.openByTagAndLike(['java'], Number(3), "sdasd");
+    //
+    await instagram.closeBrowser();
+
+    console.log("END Bot")
+
+}
+
 const puppeteer = require('puppeteer');
 
 const BASEL_URL = 'https://www.instagram.com/';
 
 const TAG_URL = (tag) => `https://www.instagram.com/explore/tags/${tag}/`;
-
-const firebase_db = require('./db');
-const puppeteerConfig = require('./config/puppeteer.json');
 
 
 const instagram = {
@@ -51,15 +73,6 @@ const instagram = {
         let notNowClick = await instagram.page.$x('//button[contains(text(), "Jetzt nicht")]');
         await notNowClick[0].click();
 
-        /*
-        await instagram.page.waitFor(2000);
-        let notNowClick;
-        while (notNowClick === undefined || notNowClick.length === 0) {
-                notNowClick = await instagram.page.$x('//button[contains(text(), "Jetzt nicht")]');
-        }
-        await notNowClick[0].click();
-
-         */
     },
 
     openByTagAndLike: async (tagList, amount, username) => {
@@ -87,8 +100,8 @@ const instagram = {
                 await instagram.page.waitFor('span[id="react-root"][aria-hidden="true"]')
                     .catch(async e => {
                         console.log('<<< ERROR OPENING POST >>> ' + e.message);
-                        await firebase_db.logError(e.message, tag, username)
-                            .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
+                        // await logError(e.message, tag, username)
+                        //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
                         await openLastPost(postURL, TAG_URL(tag), i);
                         await nextPost.click();
@@ -103,10 +116,10 @@ const instagram = {
 
                 if (isLikeable) {
                     console.log("LIKE");
-                    await instagram.page.click(puppeteerConfig.selectors.post_like_button);//click the like button
+                    await instagram.page.click('span.fr66n > button');//click the like button
 
-                    await firebase_db.like(postURL, tag, username)
-                        .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
+                    // await like(postURL, tag, username)
+                    //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
                     waitingTime = 20000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
 
@@ -127,8 +140,8 @@ const instagram = {
                     await nextPost.click();
                 } catch (e) {
                     console.log('<<< ERROR OPEN NEXT POST >>> ' + e.message);
-                    await firebase_db.logError(e.message, tag, username)
-                        .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
+                    // await logError(e.message, tag, username)
+                    //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
                     await openLastPost(postURL, TAG_URL(tag), tag);
 
@@ -137,11 +150,6 @@ const instagram = {
 
                 }
 
-
-                //Closing the current post modal
-                // await instagram.page.click(puppeteerConfig.selectors.post_close_button)
-                //     .catch((e) => console.log('<<< ERROR CLOSING POST >>> ' + e.message));
-                //Wait for random amount of time
 
             }
         }
@@ -155,8 +163,6 @@ const instagram = {
     }
 };
 
-
-module.exports = instagram;
 
 const millisToSecond = millis => ((millis % 60000) / 1000).toFixed(0);
 

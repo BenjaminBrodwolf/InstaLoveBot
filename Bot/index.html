@@ -76,6 +76,32 @@
             line-height: 1.6;
         }
     </style>
+
+<!--    <script defer src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>-->
+
+<!--    <script defer src="https://www.gstatic.com/firebasejs/6.3.4/firebase-auth.js"></script>-->
+<!--    <script defer src="https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js"></script>-->
+
+<!--    <script>-->
+<!--        // Initialize Firebase-->
+<!--        let config = {-->
+<!--            apiKey: "AIzaSyBdL0fjhrpxys_fFZxMJ0gYr7Rv3rVQJFM",-->
+<!--            authDomain: "insta-bot-like.firebaseapp.com",-->
+<!--            databaseURL: "https://insta-bot-like.firebaseio.com",-->
+<!--            projectId: "insta-bot-like",-->
+<!--            storageBucket: "insta-bot-like.appspot.com",-->
+<!--            messagingSenderId: "399839633150"-->
+<!--        };-->
+<!--        firebase.initializeApp(config);-->
+
+<!--        // const auth=firebase.auth();-->
+<!--        // const db=firebase.firestore();-->
+
+<!--        const database = firebase.database();-->
+
+
+<!--    </script>-->
+
 </head>
 <body>
 <h1> ♥ Instagram Like-Bot ♥ </h1>
@@ -104,9 +130,11 @@
             <input type="number" id="amount" name="amount" min="1" max="5000" value="1" required>
         </div>
     </fieldset>
-    <button type="submit" value="1">Starte den Instagram Bot</button>
-
+    <button type="submit">Starte den Instagram Bot</button>
 </form>
+
+<button id="btnClick">PUPPEETTEER</button>
+
 <div class="hinweis">
     <h1> HINWEIS </h1>
     <p> Beim Starten des Bots wird ein neues Fenster geöffnet. <br>
@@ -126,22 +154,28 @@
 
 
 <script>
-    const button = document.getElementById('startButton');
-    button.addEventListener('click', e => {
-        console.log('button was clicked' + e);
+
+    require('./renderer.js');
 
 
-        fetch('/clicked', {method: 'POST'})
-            .then(function (response) {
-                if (response.ok) {
-                    console.log('Click was recorded');
-                    return;
-                }
-                throw new Error('Request failed.');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    })
+
+
+    // const button = document.getElementById('startButton');
+    // button.addEventListener('click', e => {
+    //     console.log('button was clicked' + e);
+    //
+    //
+    //     fetch('/clicked', {method: 'POST'})
+    //         .then(function (response) {
+    //             if (response.ok) {
+    //                 console.log('Click was recorded');
+    //                 return;
+    //             }
+    //             throw new Error('Request failed.');
+    //         })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         });
+    // })
 </script>
 </html>
