@@ -12,18 +12,18 @@ async function startTheBot(login, pw, tags, amount) {
 
 
     await instagram.openInstagram();
-    //
+
     await instagram.login("brodwolfsky", "trinacria");
-    //
+
     await instagram.openByTagAndLike(['java'], Number(3), "sdasd");
-    //
+
     await instagram.closeBrowser();
 
     console.log("END Bot")
 
 }
 
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const BASEL_URL = 'https://www.instagram.com/';
 
