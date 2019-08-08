@@ -89,6 +89,10 @@ const instagram = {
                         console.log('<<< ERROR OPENING POST >>> ' + e.message);
                         await firebase_db.logError(e.message, tag, username)
                             .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
+
+                        await openLastPost(postURL, TAG_URL(tag), i);
+                        await nextPost.click();
+
                     });
                 await instagram.page.waitFor(1000);
                 console.log("Watching Post with Tag: <" + tag + "> Nr." + (i + 1) + " of " + amount)
@@ -125,12 +129,12 @@ const instagram = {
                     console.log('<<< ERROR OPEN NEXT POST >>> ' + e.message);
                     await firebase_db.logError(e.message, tag, username)
                         .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
-                    console.log("TRY RE-OPEN LAST POST");
 
-                    await instagram.page.goto(TAG_URL(tag), {waitUntil: 'networkidle2'});
+                    await openLastPost(postURL, TAG_URL(tag), tag);
 
-                    const postID = postURL.replace('https://www.instagram.com', '');
-                    await findPosts(postID, i)
+                    nextPost = await instagram.page.$('a.coreSpriteRightPaginationArrow'); //posts[i];
+                    await nextPost.click();
+
                 }
 
 
@@ -156,10 +160,21 @@ module.exports = instagram;
 
 const millisToSecond = millis => ((millis % 60000) / 1000).toFixed(0);
 
+const openLastPost = async (postURL, tagURL, tag) => {
 
-const findPosts = async (postID, numberOfPosts) => {
-    let foundPost;
-    let iteration = 0;
+    console.log("TRY RE-OPEN LAST POST");
+    await instagram.page.goto(tagURL, {waitUntil: 'networkidle2'});
+    const postID = postURL.replace('https://www.instagram.com', '');
+    await findPosts(postID, tag);
+}
+
+const findPosts = async (postID, tag) => {
+    let searchingIteration = 0;
+
+    console.log("Searching for post-ID: " + postID);
+
+    const post_xpath_selector = `//a[contains(@href, '${postID}')]`;
+
 
     // while (!foundPost) {
     //
@@ -172,8 +187,6 @@ const findPosts = async (postID, numberOfPosts) => {
     //     // search for Post with specifig URL
     //     console.log("Searching for post-ID: " + postID);
     //
-    //     // let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
-    //
     //
     //     iteration++;
     //     if (iteration > 10) {
@@ -181,43 +194,37 @@ const findPosts = async (postID, numberOfPosts) => {
     //     }
     // }
 
-    console.log("Searching for post-ID: " + postID);
-    foundPost = await instagram.page.$x(`//a[contains(@href, '${postID}')]`); // $x("a[contains(@href,'/p/B0y7U60gf8g/')]")[0]
-    console.log(foundPost[0]);
-    console.log(foundPost);
+    while (undefined === (await instagram.page.$x(post_xpath_selector))[0] && searchingIteration < 20) {
+        console.log("WHILE: " + searchingIteration);
+
+        await instagram.page.evaluate(async () => {
+            let distance = 600;
+            console.log(document.body.scrollHeight)
+            window.scrollBy(0, distance);
+        });
+        // waitFor render
+        await instagram.page.waitFor(1500);
+        searchingIteration++;
+    }
+
 
     try {
-        await foundPost[0].click();
+        const foundedPost = (await instagram.page.$x(post_xpath_selector))[0];
+        await foundedPost.click();
 
     } catch (e) {
-        console.log("FOUNDPOST CLICK ERROR " + e.message)
+        console.log("FOUNDPOST CLICK ERROR " + e.message);
+        console.log(" START FROM BEGINNING ");
+        // fange von vorne mit dem ersten Post an
+        await instagram.page.goto(TAG_URL(tag), {waitUntil: 'networkidle2'});
+        await instagram.page.waitFor(1000);
+
+        let posts = await instagram.page.$$('article > div:nth-child(3) img[decoding="auto"]');
+        await posts[0].click(); // click auf ersten Post
+        await instagram.page.waitFor(1000);
     }
+
+
 };
 
-const scrollPageDown = async () => {
-    window.scrollTo(0, getDocumentDimensions().height);
-    await instagram.page.waitFor(1000);
-};
 
-const getDocumentDimensions = () => {
-    const height = Math.max(
-        document.documentElement.clientHeight,
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.offsetHeight,
-    );
-
-    const width = Math.max(
-        document.documentElement.clientWidth,
-        document.body.scrollWidth,
-        document.documentElement.scrollWidth,
-        document.body.offsetWidth,
-        document.documentElement.offsetWidth,
-    );
-
-    return {
-        height,
-        width,
-    };
-};

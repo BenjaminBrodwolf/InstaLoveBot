@@ -38,7 +38,33 @@ server.listen(8081, function(){
         waitUntil: 'networkidle2'
     });
 
+    // const post_xpath_selector = '//h1[contains(text(), "HIN")]';
+    // const selected = (await page.$x(post_xpath_selector))[0];
+    //
+    // // const text = await page.evaluate(el => {
+    // //     return "blaaa";
+    // // }, selected);
+    // const example = await page.evaluate(element => {
+    //     return element;
+    // }, (await page.$x(post_xpath_selector))[0]);
+    //
+    // console.log(    undefined !== (await page.$x(post_xpath_selector))[0]  )
+    // // if ( selected !== null) console.log('found');
+    // // else console.log('not found');
+
+    // const selected = page.$x(post_xpath_selector);
+    // if (selected){
+    //     console.log("DRIN" + selected.length)
+    // } else {
+    //     console.log("OUT")
+    //
+    // }
+
 })();
+
+
+
+
 
 
 app.post('/submit', urlencodedParser , (req, res) => {
