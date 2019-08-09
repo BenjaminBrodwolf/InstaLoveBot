@@ -1,27 +1,3 @@
-"use strict";
-
-function clicked() {
-    console.log("cklicked")
-    startTheBot()
-
-}
-document.getElementById("btnClick").addEventListener ("click", () => clicked());
-
-async function startTheBot(login, pw, tags, amount) {
-    console.log("START Bot");
-
-
-    await instagram.openInstagram();
-
-    await instagram.login("brodwolfsky", "trinacria");
-
-    await instagram.openByTagAndLike(['java'], Number(3), "sdasd");
-
-    await instagram.closeBrowser();
-
-    console.log("END Bot")
-
-}
 
 const puppeteer = require('puppeteer-core');
 
@@ -216,3 +192,32 @@ const findPosts = async (postID, tag) => {
 };
 
 
+
+(async () => {
+
+    console.log(window.location.search)
+    const data = await getUrlVars()
+
+    console.log(data.tags)
+
+    let tags = data.tags.split(",");
+    tags = tags.map(e => e.replace(/\s/g, ""));
+    console.log(tags);
+
+    await instagram.openInstagram();
+
+    await instagram.login(data.login, data.password);
+
+    await instagram.openByTagAndLike(tags, Number(data.amount));
+
+    await instagram.closeBrowser();
+
+    console.log("Insta Bot ist fertig!")
+})();
+function getUrlVars() {
+    let vars = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}

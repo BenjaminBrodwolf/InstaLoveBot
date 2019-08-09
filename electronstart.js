@@ -6,6 +6,8 @@ const {app, BrowserWindow, Menu} = electron;
 
 let  mainWindow;
 
+const userDataPath = app.getPath ('userData');
+
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
@@ -14,15 +16,19 @@ app.on('ready', () => {
         }
     });
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '/Bot/index.html'),
+        pathname: path.join(__dirname, '/Bot/startBot.html'),
         protocol: 'file',
         slashes: true
     }));
+    mainWindow.webContents.openDevTools();
 
     //Build menu from template
     const mainMenu = Menu.buildFromTemplate(instagramMenuTemplate)
     // Hinzufügen des Menu
     Menu.setApplicationMenu(mainMenu);
+
+
+
 });
 
 
@@ -45,6 +51,9 @@ const instagramMenuTemplate = [
                 }
             }
         ]
+    },
+    {
+        label: userDataPath
     }
 ];
 
@@ -66,20 +75,3 @@ if(process.env.NODE_ENV !== 'production'){
 }
 
 
-
-/* ---------------------------------------------------------------  */
-
-
-async function startTheBot(login, pw, tags, amount) {
-    console.log("START Bot");
-
-    await instaPuppet.openInstagram();
-
-    await instaPuppet.login(login, pw);
-
-    await instaPuppet.openByTagAndLike(tags, Number(amount), login);
-
-    await instaPuppet.closeBrowser();
-
-    console.log("END Bot")
-}
