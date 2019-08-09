@@ -15,7 +15,9 @@ app.on('ready', () => {
         height: 600,
         title: 'Instagram Like Bot',
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            webSecurity: false
+
         }
     });
     mainWindow.loadURL(url.format({

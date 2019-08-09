@@ -2,11 +2,10 @@ const Store = require('electron-store');
 const store = new Store();
 
 const puppeteer = require('puppeteer-core');
-
 const BASEL_URL = 'https://www.instagram.com/';
-
 const TAG_URL = (tag) => `https://www.instagram.com/explore/tags/${tag}/`;
 
+let headlessModus = true;
 let login;
 let tags;
 let amount;
@@ -21,20 +20,24 @@ const instagram = {
         console.log("initialize")
         instagram.browser = await puppeteer.launch({
             executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-            headless: false,
-            args: ['--no-sandbox']
+            headless: headlessModus,
+            args: ['--no-sandbox', '--lang=de-DE']
         });
 
         instagram.page = await instagram.browser.newPage();
-        // instagram.page.setViewport({width: 1500, height: 764});
 
+        await instagram.page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
+        await instagram.page.setViewport({width: 960, height: 768});
 
         await instagram.page.goto(BASEL_URL, {timeout: 60000});
         await instagram.page.waitFor(2500);
     },
 
     login: async (username, password) => {
+        console.log("LOGIN")
+        await instagram.page.screenshot({path: './screenshot/login.jpg', type: 'jpeg'});
 
+        await instagram.page.waitForXPath('//a[contains(text(), "Melde dich an.")]');
         let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
 
         /* Klicke Login */
@@ -51,13 +54,16 @@ const instagram = {
         await loginButton[0].click();
 
         await instagram.page.waitForNavigation();
+        await instagram.page.screenshot({path: './screenshot/loggedIN.jpg', type: 'jpeg'});
 
         let notNowClick = await instagram.page.$x('//button[contains(text(), "Jetzt nicht")]');
-        await notNowClick[0].click();
+        if (notNowClick.length > 0) await notNowClick[0].click();
 
     },
 
     openByTagAndLike: async (tagList, amount, username) => {
+        console.log("OPEN BY TAG");
+
         let waitingTime = 0;
         let postURL;
 
@@ -65,6 +71,8 @@ const instagram = {
 
             await instagram.page.goto(TAG_URL(tag), {waitUntil: 'networkidle2'});
             await instagram.page.waitFor(1000);
+
+            await instagram.page.screenshot({path: './screenshot/openByTag.jpg', type: 'jpeg'});
 
             let posts = await instagram.page.$$('article > div:nth-child(3) img[decoding="auto"]');
             await posts[0].click(); // click auf ersten Post
@@ -99,7 +107,16 @@ const instagram = {
                 if (isLikeable) {
                     console.log("LIKE");
                     await instagram.page.click('span.fr66n > button');//click the like button
-                    updateLikedView();
+
+                    let picNr = i % 20;
+                    await instagram.page.screenshot({
+                        path: `./screenshot/liked/${picNr}.jpg`,
+                        type: 'jpeg',
+                        clip: {x: 70, y: 200, width: 480, height: 380}
+                    });
+
+                    updateView('liked', ++liked);
+                    addTablePost(`../screenshot/liked/${picNr}.jpg`, "Benjj");
                     // await like(postURL, tag, username)
                     //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
@@ -129,9 +146,7 @@ const instagram = {
 
                     nextPost = await instagram.page.$('a.coreSpriteRightPaginationArrow'); //posts[i];
                     await nextPost.click();
-
                 }
-
 
             }
         }
@@ -165,7 +180,7 @@ const findPosts = async (postID, tag) => {
 
     // while not found scroll down. After 20-times stop
     while (undefined === (await instagram.page.$x(post_xpath_selector))[0] && searchingIteration < 20) {
-        console.log("WHILE: " + searchingIteration);
+        console.log("Searching.... " + searchingIteration + " / 20");
 
         await instagram.page.evaluate(async () => {
             let distance = 600;
@@ -173,7 +188,7 @@ const findPosts = async (postID, tag) => {
             window.scrollBy(0, distance);
         });
         // waitFor render
-        await instagram.page.waitFor(1500);
+        await instagram.page.waitFor(1100);
         searchingIteration++;
     }
 
@@ -200,7 +215,10 @@ const findPosts = async (postID, tag) => {
 
 (async () => {
 
-    const data = await getUrlVars()
+    const data = await getUrlVars();
+    console.log(data.headless);
+    headlessModus = !data.headless;
+
     const hashTags = data.tags.replace("%2C+", ":::").replace("%2C", ":::").split(":::");  // AAA, BBB,CCC = AAA%2C+BBB%2CCCC
 
     login = data.login;
@@ -254,8 +272,26 @@ const updateView = (elementID, value) => {
     document.getElementById(elementID).innerText = value;
 };
 
-const updateLikedView = () =>{
-    const actual = Number(document.getElementById('liked').innerText);
-    console.log(actual);
-    updateView('liked', actual+1);
+function addTablePost(picPath, postUser) {
+    console.log(picPath)
+    // get the html table
+    // 0 = the first table
+    let table = document.getElementsByTagName('table')[0];
+
+    // add new empty row to the table
+    // 0 = in the top
+    // table.rows.length = the end
+    // table.rows.length/2+1 = the center
+    let newRow = table.insertRow(1);
+
+    // add cells to the row
+    let cel1 = newRow.insertCell(0);
+    let cel2 = newRow.insertCell(1);
+    let cel3 = newRow.insertCell(2);
+
+    // add values to the cells
+    cel1.innerHTML = liked.toString();
+    cel2.innerHTML = `<img src="${picPath}"/>`;
+    cel3.innerHTML = postUser;
+
 }
