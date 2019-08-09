@@ -11,6 +11,9 @@ const userDataPath = app.getPath ('userData');
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        title: 'Instagram Like Bot',
         webPreferences: {
             nodeIntegration: true
         }
@@ -51,9 +54,6 @@ const instagramMenuTemplate = [
                 }
             }
         ]
-    },
-    {
-        label: userDataPath
     }
 ];
 
@@ -69,6 +69,9 @@ if(process.env.NODE_ENV !== 'production'){
                 click(item, focusedWindow){
                     focusedWindow.toggleDevTools();
                 }
+            },
+            {
+                role: 'reload'
             }
         ]
     })

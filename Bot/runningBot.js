@@ -1,3 +1,5 @@
+const Store = require('electron-store');
+const store = new Store();
 
 const puppeteer = require('puppeteer-core');
 
@@ -5,6 +7,10 @@ const BASEL_URL = 'https://www.instagram.com/';
 
 const TAG_URL = (tag) => `https://www.instagram.com/explore/tags/${tag}/`;
 
+let login;
+let tags;
+let amount;
+let liked = 0;
 
 const instagram = {
     browser: null,
@@ -93,7 +99,7 @@ const instagram = {
                 if (isLikeable) {
                     console.log("LIKE");
                     await instagram.page.click('span.fr66n > button');//click the like button
-
+                    updateLikedView();
                     // await like(postURL, tag, username)
                     //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
@@ -192,17 +198,38 @@ const findPosts = async (postID, tag) => {
 };
 
 
-
 (async () => {
 
-    console.log(window.location.search)
     const data = await getUrlVars()
+    const hashTags = data.tags.replace("%2C+", ":::").replace("%2C", ":::").split(":::");  // AAA, BBB,CCC = AAA%2C+BBB%2CCCC
 
-    console.log(data.tags)
+    login = data.login;
+    tags = hashTags;
+    amount = data.amount;
+    console.log(data.remember)
 
-    let tags = data.tags.split(",");
-    tags = tags.map(e => e.replace(/\s/g, ""));
-    console.log(tags);
+    // document.getElementById('name').innerText = login;
+    // document.getElementById('tags').innerText = tags
+
+    updateView('name', login);
+    updateView('tags', tags)
+    updateView('liked', liked)
+    updateView('amount', amount)
+
+
+    if (data.remember) {
+        store.set('remember', 'ON');
+        store.set('login', login);
+        store.set('pw', data.password);
+
+    } else {
+        store.set('remember', 'OFF');
+        store.set('login', '');
+        store.set('pw', '');
+    }
+
+
+    // STARTING THE INSTAGRAM LIKE BOT PUPPETEER
 
     await instagram.openInstagram();
 
@@ -214,10 +241,21 @@ const findPosts = async (postID, tag) => {
 
     console.log("Insta Bot ist fertig!")
 })();
+
 function getUrlVars() {
     let vars = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
         vars[key] = value;
     });
     return vars;
+}
+
+const updateView = (elementID, value) => {
+    document.getElementById(elementID).innerText = value;
+};
+
+const updateLikedView = () =>{
+    const actual = Number(document.getElementById('liked').innerText);
+    console.log(actual);
+    updateView('liked', actual+1);
 }

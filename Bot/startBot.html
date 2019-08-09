@@ -33,7 +33,7 @@
             margin: 0 20% 2% 20%;
         }
 
-        input {
+        input[type=text], input[type=password], input[type=number] {
             width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -47,6 +47,7 @@
             float: left;
             font-weight: bold;
         }
+
 
         button {
             background-color: #1dbe17;
@@ -86,12 +87,16 @@
         <legend> Dein Instagram-Login</legend>
         <div class="input">
             <label for="login">Login</label>
-            <input type="text" id="login" name="login" placeholder="Benutzername" required value="brodwolfsky">
+            <input type="text" id="login" name="login" placeholder="Benutzername" required >
         </div>
         <div class="input">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password" required value="trinacria">
+            <input type="password" id="password" name="password" placeholder="Password" required >
         </div>
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+
     </fieldset>
 
     <fieldset>
@@ -102,7 +107,7 @@
         </div>
         <div class="input">
             <label for="amount">Wie viele Posts pro HashTags sollen gelikt werden (min: 1 max: 5'000)</label>
-            <input type="number" id="amount" name="amount" min="1" max="5000" value="1" required>
+            <input type="number" id="amount" name="amount" min="1" max="5000" value="100" required>
         </div>
     </fieldset>
     <button type="submit">Starte den Instagram Bot</button>

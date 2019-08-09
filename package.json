@@ -13,6 +13,7 @@
   "author": "Benjamin Brodwolf",
   "license": "ISC",
   "dependencies": {
+    "electron-store": "^4.0.0",
     "puppeteer-core": "^1.19.0"
   },
   "devDependencies": {
