@@ -115,6 +115,7 @@ const instagram = {
                         clip: {x: 70, y: 200, width: 480, height: 380}
                     });
 
+
                     updateView('liked', ++liked);
                     addTablePost(`../screenshot/liked/${picNr}.jpg`, "Benjj");
                     // await like(postURL, tag, username)
