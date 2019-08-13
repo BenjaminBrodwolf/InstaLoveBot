@@ -326,20 +326,26 @@ function addNewPost(picPath, userName, userPic, userComment, postURL) {
     const postInfo = document.getElementsByClassName('post')[0];
 
     const postHeight = postInfo.clientHeight;
-    const imageHeight = document.getElementsByClassName('photo')[0]
+    const imageHeight = 350; // document.getElementsByClassName('photo')[0];
 
     const commentHeight = postInfo.lastElementChild.lastElementChild.clientHeight; //document.getElementsByClassName('comment')[0].clientHeight + 7;
-    //document.getElementsByClassName('photo')[0];
 
     console.log("commentHeight ", commentHeight);
-    console.log("imgHeigth", imageHeight.height);
-    console.log("imgHeigth", imageHeight.clientHeight);
-    console.log("imgHeigth", imageHeight.offsetHeight);
-    console.log("imgHeigth", imageHeight.getBoundingClientRect().height);
+    // console.log("tag", document.getElementsByTagName('img')[0]);
+    // console.log("tag", document.getElementsByTagName('img')[0].offsetHeight);
+    //
+    // console.log("imgHeigth", imageHeight);
+    // console.log("imgHeigth", imageHeight.height);
+    // console.log("imgHeigth", imageHeight.clientHeight);
+    // console.log("imgHeigth", imageHeight.offsetHeight);
+    // console.log("imgHeigth", imageHeight.getBoundingClientRect().height);
 
     console.log("postHeigth ", postHeight)
     let y = postHeight - (commentHeight + 100 + imageHeight);
     console.log("y ", y);
+    if(y < 0){
+        y = y*-1;
+    }
     if (y > imageHeight) {
         y = imageHeight;
     }
