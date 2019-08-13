@@ -1,10 +1,27 @@
 
 
 :root{
-    --scroll-height: 0px;
+    /*--scroll-height: 0px;*/
 }
+
+.infos{
+    background-color: rgba(247, 205, 205, 0.55);
+    padding: 5px;
+    margin: 20px 10% 2% 10%;
+    border-radius: 2rem;
+    line-height: 1.6;
+}
+.infos  p{
+    display: inline-block;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
 .newLikedPosts {
 }
+
+
 
 .post {
     display:inline-block;
@@ -24,14 +41,6 @@
     background-color: rgba(255, 255, 255, 1);
 
     box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.35);
-
-
-    -webkit-filter: blur(0);
-    -webkit-font-smoothing: antialiased;
-
-    /*-webkit-transform: translate(-50%, -50%);*/
-    /*transform: translate(-50%, -50%);*/
-
 }
 
 .post:hover{
@@ -39,22 +48,20 @@
 }
 @keyframes slide-fwd-center {
     0% {
-        transform: perspective(120px) translateZ(0px);    }
+        transform: perspective(120px) translate3d(0,0,0px);    }
     100% {
-        transform: perspective(120px) translateZ(5px);    }
+        transform: perspective(120px)translate3d(0,0,5px);   }
 }
 .post:not(hover) {
     animation: slide-fwd-center-back 0.45s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 @keyframes slide-fwd-center-back {
     0% {
-        transform: perspective(120px) translateZ(5px);    }
+        transform: perspective(120px) translate3d(0,0,5px);     }
     100% {
-        transform: perspective(120px) translateZ(0px);    }
+        transform: perspective(120px) translate3d(0,0,0px);     }
 }
 
-.photo {
-}
 
 .photo img {
     padding: 0;

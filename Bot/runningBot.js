@@ -82,7 +82,7 @@ const instagram = {
             await instagram.page.waitFor(1000);
 
 
-            for (let i = 0; i < amount; i++) {
+            for (let i = 0; i < amount/tagList.length; i++) {
                 const URL = await instagram.page.url(); //.$('a.c-Yi7')
                 if (!URL.toString().startsWith("https://www.instagram.com/explore/tags/")) {
                     postURL = URL;
@@ -101,7 +101,11 @@ const instagram = {
 
                     });
                 await instagram.page.waitFor(1000);
-                console.log("Watching Post with Tag: <" + tag + "> Nr." + (i + 1) + " of " + amount)
+
+
+                postURL = await instagram.page.url();
+
+                console.log("Watching Post with Tag: <" + tag + "> Nr." + (i + 1) + " of " + amount);
                 console.log(postURL);
 
 
@@ -311,15 +315,15 @@ function addNewPost(picPath, userName, userPic, userComment, postURL) {
     postField.insertAdjacentHTML('afterbegin', `
     <div class="post">
         <div class="photo">
-            <img src="${picPath}" />
+            <img src="${picPath}" onclick="openURL('${postURL}')" style="cursor: pointer"/>
         </div>
 
         <div class="card_inside">
 
             <div class="author">
-                <img src="${userPic}" alt="user">
-                <div class="author_name">
-                    <h4>${userName}</h4>
+                <img src="${userPic}" alt="user" onclick="openURL('https://www.instagram.com/${userName}')" style="cursor: pointer">
+                <div class="author_name" >
+                    <h4 onclick="openURL('https://www.instagram.com/${userName}')" style="cursor: pointer">${userName}</h4>
                 </div>
             </div>
 
