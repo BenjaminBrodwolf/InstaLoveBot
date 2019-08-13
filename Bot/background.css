@@ -1,0 +1,14 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    background-image: url("http://energia.pr.gov/wp-content/uploads/2017/01/Instagram-colors-768x768.jpg");
+    background-color: #F26B4E;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

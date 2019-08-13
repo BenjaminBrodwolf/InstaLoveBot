@@ -107,17 +107,36 @@ const instagram = {
                 if (isLikeable) {
                     console.log("LIKE");
                     await instagram.page.click('span.fr66n > button');//click the like button
-
-                    let picNr = i % 20;
-                    await instagram.page.screenshot({
-                        path: `./screenshot/liked/${picNr}.jpg`,
-                        type: 'jpeg',
-                        clip: {x: 70, y: 200, width: 480, height: 380}
-                    });
-
-
                     updateView('liked', ++liked);
-                    addTablePost(`../screenshot/liked/${picNr}.jpg`, "Benjj");
+
+
+                    // div.kPFhm > div.KL4Bh > img    // foto einzel
+                    const singlePic = 'div.kPFhm > div.KL4Bh > img'; // .src
+                    const manyPics = 'div.eLAPa > div.KL4Bh > img'; // .src
+                    const videoPic = 'div.GRtmf.wymO0 > div > video'; // .poster
+
+                    let newPic = "";
+                    if (await instagram.page.$(singlePic)) {
+                        console.log("singlePic")
+                        newPic = await instagram.page.$eval(singlePic, el => el.src);
+                    } else if (await instagram.page.$$(manyPics)) {
+                        console.log("firstPic")
+                        // const amountPics = await instagram.page.$$(manyPics).length;
+                        newPic = await instagram.page.$$eval(manyPics, el => el[el.length - 2].src);
+                    } else if (await instagram.page.$(videoPic)) {
+                        console.log("VideoPic")
+                        newPic = await instagram.page.$eval(videoPic, el => el.poster);
+                    } else {
+                        console.log("KEIN PIC GEFUNDEN!!!")
+                    }
+                    console.log(newPic);
+
+                    const userName = await instagram.page.$eval('div.e1e1d > h2 > a', el => el.text);
+                    const userPic = await instagram.page.$eval('img._6q-tv', el => el.src);
+                    const userComment = await instagram.page.$eval('div.C4VMK > span', el => el.innerHTML);
+                    const follow = await instagram.page.$('div.bY2yH > button', btn => btn.textContent);
+
+                    addNewPost(newPic, userName, userPic, userComment, postURL);
                     // await like(postURL, tag, username)
                     //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
@@ -230,7 +249,7 @@ const findPosts = async (postID, tag) => {
     // document.getElementById('name').innerText = login;
     // document.getElementById('tags').innerText = tags
 
-    updateView('name', login);
+    // updateView('name', login);
     updateView('tags', tags)
     updateView('liked', liked)
     updateView('amount', amount)
@@ -273,26 +292,63 @@ const updateView = (elementID, value) => {
     document.getElementById(elementID).innerText = value;
 };
 
-function addTablePost(picPath, postUser) {
-    console.log(picPath)
-    // get the html table
-    // 0 = the first table
-    let table = document.getElementsByTagName('table')[0];
+const openBrowser = url => {
+    // event.preventDefault();
+    console.log("openBrowser ", url)
+};
 
-    // add new empty row to the table
-    // 0 = in the top
-    // table.rows.length = the end
-    // table.rows.length/2+1 = the center
-    let newRow = table.insertRow(1);
+function addNewPost(picPath, userName, userPic, userComment, postURL) {
 
-    // add cells to the row
-    let cel1 = newRow.insertCell(0);
-    let cel2 = newRow.insertCell(1);
-    let cel3 = newRow.insertCell(2);
+    const postField = document.getElementById("newLikedPosts");
 
-    // add values to the cells
-    cel1.innerHTML = liked.toString();
-    cel2.innerHTML = `<img src="${picPath}"/>`;
-    cel3.innerHTML = postUser;
+    postField.insertAdjacentHTML('afterbegin', `
+    <div class="post">
+        <div class="photo">
+            <img src="${picPath}" />
+        </div>
 
+        <div class="card_inside">
+
+            <div class="author">
+                <img src="${userPic}" alt="user">
+                <div class="author_name">
+                    <h4>${userName}</h4>
+                </div>
+            </div>
+
+            <div class="comment">
+              ${userComment}
+              </div>
+        </div>
+    </div>
+    `);
+
+    const postInfo = document.getElementsByClassName('post')[0];
+
+    const postHeight = postInfo.clientHeight;
+    const imageHeight = document.getElementsByClassName('photo')[0]
+
+    const commentHeight = postInfo.lastElementChild.lastElementChild.clientHeight; //document.getElementsByClassName('comment')[0].clientHeight + 7;
+    //document.getElementsByClassName('photo')[0];
+
+    console.log("commentHeight ", commentHeight);
+    console.log("imgHeigth", imageHeight.height);
+    console.log("imgHeigth", imageHeight.clientHeight);
+    console.log("imgHeigth", imageHeight.offsetHeight);
+    console.log("imgHeigth", imageHeight.getBoundingClientRect().height);
+
+    console.log("postHeigth ", postHeight)
+    let y = postHeight - (commentHeight + 100 + imageHeight);
+    console.log("y ", y);
+    if (y > imageHeight) {
+        y = imageHeight;
+    }
+    console.log("y ", y);
+
+    // document.documentElement.style.setProperty('--scroll-height', "-" + commentHeight + "px");
+    let cardDiv = document.getElementsByClassName('card_inside')[0];
+    cardDiv.setAttribute("onMouseOver", `this.style.transform='translateY(-${y}px)'`);
+    cardDiv.setAttribute("onMouseOut", "this.style.transform='translateY(0)'");
 }
+
+
