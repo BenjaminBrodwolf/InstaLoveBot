@@ -5,16 +5,16 @@
     <title>Instagram ♥ Bot</title>
     <link rel="stylesheet" href="background.css">
 
-    <link rel="stylesheet" href="standard.css">
+    <link rel="stylesheet" href="startBot.css">
 </head>
 <body>
 <h1> ♥ Instagram Like-Bot ♥ </h1>
 
 <form action="runningBot.html" method="get">
-    <fieldset>
+    <fieldset style="max-width: 300px; margin: 0 auto 25px;">
         <legend> Dein Instagram-Login</legend>
         <div class="input">
-            <label for="login">Login</label>
+            <label for="login">Benutzername</label>
             <input type="text" id="login" name="login" placeholder="Benutzername" required >
         </div>
         <div class="input">
@@ -22,31 +22,32 @@
             <input type="password" id="password" name="password" placeholder="Password" required >
         </div>
         <label>
-            <input type="checkbox" checked="checked" name="remember"> Remember me
+            <input type="checkbox" checked="checked" name="remember"> Login merken?
         </label>
 
     </fieldset>
 
-    <fieldset>
+    <fieldset style="max-width: 500px; margin: 0 auto 25px;">
         <legend> Instagram-Bot Einstellungen</legend>
         <div class="input">
             <label for="tags">Tag (wenn mehrere trenne mit Komma ",")</label>
             <input type="text" id="tags" name="tags" placeholder="zB. Yoga, Vinyasa, Hanuman, BeniBärenstark" required>
         </div>
         <div class="input">
-            <label for="amount">Wie viele Posts pro HashTags sollen gelikt werden (min: 1 max: 5'000)</label>
-            <input type="number" id="amount" name="amount" min="1" max="5000" value="100" required>
+            <label for="amount">Wie viele Posts pro HashTags sollen gelikt werden (max: 1'000)</label>
+            <input type="number" id="amount" name="amount" min="1" max="1000" value="500" required>
         </div>
     </fieldset>
-    <button type="submit">Starte den Instagram Bot</button>
-    <label style="float: none">
-        <input type="checkbox" name="headless"> Bot zuschauen
-    </label>
+    <div class="buttons">
+        <button type="submit">Starte den Instagram Bot</button>
+        <label style="float: none">
+            <input type="checkbox" name="headless" id="botShow" > Bot bei der Arbeit zuschauen?
+        </label>
+    </div>
+
 </form>
 
-<!--<button id="btnClick">PUPPEETTEER</button>-->
-
-<div class="hinweis">
+<div id="hinweis">
     <h1> HINWEIS </h1>
     <p> Beim Starten des Bots wird ein neues Fenster geöffnet. <br>
         Kontrolliere ob das Login funktioniert hat und gebe wenn nötig die zusätzliche Authentifizierung ein (ist je
@@ -56,6 +57,7 @@
     </p>
     <h3><strong> Also bitte nichts Anklicken! 😄 </strong></h3>
 </div>
+
 <footer>
     <p>Created by: Benjamin Brodwolf</p>
     <p>Contact information: <a href="mailto:benjamin.brodwolf@outlook.com">
@@ -65,6 +67,23 @@
 
 
 <script>
+
+    const checkBox = document.getElementById('botShow');
+    const hinweisBox = document.getElementById('hinweis');
+    checkBox.addEventListener('change', (event) => {
+        hinweisBox.classList.toggle('collapsed');
+
+        if (event.target.checked) {
+            console.log('checked')
+            // hinweisBox.style.display = "block";
+
+        } else {
+            console.log('not checked')
+            // hinweisBox.style.display = "none";
+
+        }
+    });
+
 
     require('./startBot.js');
 

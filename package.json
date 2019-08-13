@@ -13,6 +13,7 @@
   "author": "Benjamin Brodwolf",
   "license": "ISC",
   "dependencies": {
+    "electron-open-link-in-browser": "^1.0.2",
     "electron-store": "^4.0.0",
     "puppeteer-core": "^1.19.0"
   },

@@ -11,6 +11,9 @@ let tags;
 let amount;
 let liked = 0;
 
+
+
+
 const instagram = {
     browser: null,
     page: null,
@@ -21,7 +24,7 @@ const instagram = {
         instagram.browser = await puppeteer.launch({
             executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             headless: headlessModus,
-            args: ['--no-sandbox', '--lang=de-DE']
+            args: ['--no-sandbox', '--lang=de-DE'],
         });
 
         instagram.page = await instagram.browser.newPage();
@@ -233,11 +236,15 @@ const findPosts = async (postID, tag) => {
 };
 
 
+
+/* ------------- START ----------- */
+
 (async () => {
 
     const data = await getUrlVars();
-    console.log(data.headless);
+
     headlessModus = !data.headless;
+    console.log("headlessModus: ", headlessModus);
 
     const hashTags = data.tags.replace("%2C+", ":::").replace("%2C", ":::").split(":::");  // AAA, BBB,CCC = AAA%2C+BBB%2CCCC
 
@@ -280,6 +287,11 @@ const findPosts = async (postID, tag) => {
     console.log("Insta Bot ist fertig!")
 })();
 
+
+
+
+/* ---- UTILITIES ---- */
+
 function getUrlVars() {
     let vars = {};
     window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -290,11 +302,6 @@ function getUrlVars() {
 
 const updateView = (elementID, value) => {
     document.getElementById(elementID).innerText = value;
-};
-
-const openBrowser = url => {
-    // event.preventDefault();
-    console.log("openBrowser ", url)
 };
 
 function addNewPost(picPath, userName, userPic, userComment, postURL) {
@@ -323,38 +330,33 @@ function addNewPost(picPath, userName, userPic, userComment, postURL) {
     </div>
     `);
 
-    const postInfo = document.getElementsByClassName('post')[0];
+    setTimeout(() => { //wait a little to be sure, the image and everything is loaded on the HTML-Body
+        const postInfo = document.getElementsByClassName('post')[0];
 
-    const postHeight = postInfo.clientHeight;
-    const imageHeight = 350; // document.getElementsByClassName('photo')[0];
+        const postHeight = postInfo.clientHeight;
+        const imageHeight = document.getElementsByClassName('photo')[0].clientHeight;
+        const commentHeight = postInfo.lastElementChild.lastElementChild.clientHeight; //document.getElementsByClassName('comment')[0].clientHeight + 7;
 
-    const commentHeight = postInfo.lastElementChild.lastElementChild.clientHeight; //document.getElementsByClassName('comment')[0].clientHeight + 7;
+        let y = postHeight - (commentHeight + 100 + imageHeight);
 
-    console.log("commentHeight ", commentHeight);
-    // console.log("tag", document.getElementsByTagName('img')[0]);
-    // console.log("tag", document.getElementsByTagName('img')[0].offsetHeight);
-    //
-    // console.log("imgHeigth", imageHeight);
-    // console.log("imgHeigth", imageHeight.height);
-    // console.log("imgHeigth", imageHeight.clientHeight);
-    // console.log("imgHeigth", imageHeight.offsetHeight);
-    // console.log("imgHeigth", imageHeight.getBoundingClientRect().height);
+        // console.log("commentHeight ", commentHeight);
+        // console.log("imgHeigth", imageHeight);
+        // console.log("postHeigth ", postHeight);
+        // console.log("y ", y);
 
-    console.log("postHeigth ", postHeight)
-    let y = postHeight - (commentHeight + 100 + imageHeight);
-    console.log("y ", y);
-    if(y < 0){
-        y = y*-1;
-    }
-    if (y > imageHeight) {
-        y = imageHeight;
-    }
-    console.log("y ", y);
+        if (y < 0) {
+            y = y * -1;
+        }
+        if (y > imageHeight) {
+            y = imageHeight;
+        }
 
-    // document.documentElement.style.setProperty('--scroll-height', "-" + commentHeight + "px");
-    let cardDiv = document.getElementsByClassName('card_inside')[0];
-    cardDiv.setAttribute("onMouseOver", `this.style.transform='translateY(-${y}px)'`);
-    cardDiv.setAttribute("onMouseOut", "this.style.transform='translateY(0)'");
+        let cardDiv = document.getElementsByClassName('card_inside')[0];
+        cardDiv.setAttribute("onMouseOver", `this.style.transform='translateY(-${y}px)'`);
+        cardDiv.setAttribute("onMouseOut", "this.style.transform='translateY(0)'");
+    }, 1500);
+
+
 }
 
 

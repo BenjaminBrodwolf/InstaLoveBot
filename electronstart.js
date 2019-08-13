@@ -6,18 +6,20 @@ const {app, BrowserWindow, Menu} = electron;
 
 let  mainWindow;
 
+delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS;
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
 const userDataPath = app.getPath ('userData');
 
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 900,
+        height: 800,
         title: 'Instagram Like Bot',
         webPreferences: {
             nodeIntegration: true,
             webSecurity: false
-
         }
     });
     mainWindow.loadURL(url.format({
@@ -31,8 +33,6 @@ app.on('ready', () => {
     const mainMenu = Menu.buildFromTemplate(instagramMenuTemplate)
     // Hinzufügen des Menu
     Menu.setApplicationMenu(mainMenu);
-
-
 
 });
 
