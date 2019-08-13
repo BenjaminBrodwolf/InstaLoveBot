@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Instagram ♥ Bot</title>
@@ -7,11 +8,14 @@
 
     <link rel="stylesheet" href="startBot.css">
 
-<!--    <script type="text/javascript" src="build/electron-open-link-in-browser.js"></script>-->
+    <!--    <script type="text/javascript" src="build/electron-open-link-in-browser.js"></script>-->
 
 </head>
+
 <body>
-<h1> ♥ Dein Instagram Like-Bot ♥ </h1>
+    <h1> ♥ Dein Instagram Like-Bot ♥ </h1>
+
+
 
 
 <form action="runningBot.html" method="get">
@@ -53,13 +57,14 @@
 
 <div id="hinweis">
     <h1> HINWEIS </h1>
-    <p> Beim Starten des Bots wird ein neues Fenster geöffnet. <br>
-        Kontrolliere ob das Login funktioniert hat und gebe wenn nötig die zusätzliche Authentifizierung ein (ist je
-        nach Account unterschiedlich). <br>
-        Die ganze Prozedur wird automatisch Gesteuert und hat künstliche "Warten-Zeiten", damit es den
-        Instagram-Benutzer imitiert und nicht als Bot erkannt wird. <br>
+    <p> Beim Starten des Bots wird ein neues Fenster geöffnet und darin <strong>nichts anklicken</strong>, sonder am besten einfach sein lassen. <br>
+        Die ganze Prozedur wird automatisch Gesteuert und nach jedem Like wird zwiscchen 25-30 Sekunden gewartet, damit es den
+        Instagram-Benutzer imitiert und nicht als Bot erkannt wird.<br>
+        <strong> Viel Spass! 😄 </strong><br>
+
+
     </p>
-    <h3><strong> Also bitte nichts Anklicken! 😄 </strong></h3>
+
 </div>
 
 <footer>
@@ -67,30 +72,38 @@
     <p>Contact information: <a href="mailto:benjamin.brodwolf@outlook.com">
         benjamin.brodwolf@outlook.com</a>.</p>
 </footer>
+
+
+    <ul class="hearts">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+
+    </ul>
 </body>
 
 
 <script>
-
     const checkBox = document.getElementById('botShow');
     const hinweisBox = document.getElementById('hinweis');
     checkBox.addEventListener('change', (event) => {
         hinweisBox.classList.toggle('collapsed');
-
-        if (event.target.checked) {
-            console.log('checked')
-            // hinweisBox.style.display = "block";
-
-        } else {
-            console.log('not checked')
-            // hinweisBox.style.display = "none";
-
-        }
     });
 
 
     require('./startBot.js');
-
 
 </script>
 

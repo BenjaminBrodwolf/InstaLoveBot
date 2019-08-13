@@ -1,15 +1,182 @@
 html {
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    background-image: url("http://energia.pr.gov/wp-content/uploads/2017/01/Instagram-colors-768x768.jpg");
-    background-color: #F26B4E;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    /*background-image: url("http://energia.pr.gov/wp-content/uploads/2017/01/Instagram-colors-768x768.jpg");*/
+    /*background-color: #F26B4E;*/
+    /*background-position: center;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
+
+    background-image: linear-gradient(-45deg, #F7A841, #CC356A, #46469C);
+    background-size: 600% 600%;
+    background-repeat: repeat;
+
+    /*width: 100%;*/
+    /*height: 100%;*/
+
+    animation: bg-pan-right 8s infinite alternate both;
+
 }
 
+@keyframes bg-pan-right {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.hearts {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 120%;
+    overflow: hidden;
+    z-index: -10000;
+}
+
+.hearts li {
+    position: absolute;
+    display: block;
+    list-style: none;
+    background-image: url("../assets/Love_Heart_SVG.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+ width: 50px;
+    height: 50px;
+    /*background: rgba(255, 255, 255, 0.2);*/
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+}
+.hearts li:nth-child(1){
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+}
+
+
+.hearts li:nth-child(2){
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+}
+
+.hearts li:nth-child(3){
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+}
+
+.hearts li:nth-child(4){
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+
+.hearts li:nth-child(5){
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+}
+
+.hearts li:nth-child(6){
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+}
+
+.hearts li:nth-child(7){
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+}
+
+.hearts li:nth-child(8){
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+}
+
+.hearts li:nth-child(9){
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+}
+
+.hearts li:nth-child(10){
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+}
+.hearts li:nth-child(11){
+    left: 66%;
+    width: 220px;
+    height: 220px;
+    animation-delay: 4s;
+    animation-duration: 16s;
+}
+.hearts li:nth-child(12){
+    left: 90%;
+    width: 100px;
+    height: 100px;
+    animation-delay: 7s;
+    animation-duration: 7s;
+}
+.hearts li:nth-child(13){
+    left: 59%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 3s;
+    animation-duration: 6s;
+}
+.hearts li:nth-child(14){
+    left: 10%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 3s;
+    animation-duration: 5s;
+}
+.hearts li:nth-child(15){
+    left: 22%;
+    width: 200px;
+    height: 200px;
+    animation-delay: 8s;
+    animation-duration: 22s;
+}
+@keyframes animate {
+
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-1300px) rotate(720deg);
+        opacity: 0.2%;
+    }
+
+}
