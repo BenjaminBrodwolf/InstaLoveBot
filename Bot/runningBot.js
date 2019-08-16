@@ -1,7 +1,7 @@
 const Store = require('electron-store');
 const store = new Store();
 
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const BASEL_URL = 'https://www.instagram.com/';
 const TAG_URL = (tag) => `https://www.instagram.com/explore/tags/${tag}/`;
 
@@ -22,7 +22,7 @@ const instagram = {
     openInstagram: async () => {
         console.log("initialize")
         instagram.browser = await puppeteer.launch({
-            // executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+            executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             headless: headlessModus,
             args: ['--no-sandbox', '--lang=de-DE'],
         });
@@ -163,7 +163,7 @@ const instagram = {
                     //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
 
-                    waitingTime = 25000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
+                    waitingTime = 26000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
 
                     await instagram.page.waitFor(1500); //short waiting time fot the BotMessage-Showtime
                     waitingTime -= 1500;
@@ -173,11 +173,11 @@ const instagram = {
                     console.log("ALREADY LIKED");
 
                     i--;
-                    waitingTime = 1000 + Math.floor(Math.random() * 6000);
-                    waitingMessage = "Bereits gelikt. Next post... ";
+                    waitingTime = 1500 + Math.floor(Math.random() * 6000);
+                    waitingMessage = "Bereits gelikt. Öffne nächsten Post in ";
                 }
 
-                if (i + 1 == amount) {
+                if (i + 1 === amount) {
                     console.log("FINISHED");
                     return;
                 }
