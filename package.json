@@ -9,12 +9,16 @@
     "package-win": "electron-packager . InstagramLikeBot --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/instaLikeBot.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Instagram Like Bot\"",
     "package-linux": "electron-packager . InstagramLikeBot --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   },
-  "keywords": ["instagram", "bot", "like"],
+  "keywords": [
+    "instagram",
+    "bot",
+    "like"
+  ],
   "author": "Benjamin Brodwolf",
   "license": "ISC",
   "dependencies": {
     "electron-store": "^4.0.0",
-    "puppeteer-core": "^1.19.0"
+    "puppeteer": "^1.19.0"
   },
   "devDependencies": {
     "electron": "^6.0.1",

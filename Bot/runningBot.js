@@ -1,7 +1,7 @@
 const Store = require('electron-store');
 const store = new Store();
 
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 const BASEL_URL = 'https://www.instagram.com/';
 const TAG_URL = (tag) => `https://www.instagram.com/explore/tags/${tag}/`;
 
@@ -10,7 +10,7 @@ let login;
 let tags;
 let amount;
 let liked = 0;
-
+let blocked = false;
 let waitingMessage = "Bot Loggt sich ein";
 
 
@@ -22,7 +22,7 @@ const instagram = {
     openInstagram: async () => {
         console.log("initialize")
         instagram.browser = await puppeteer.launch({
-            executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+            // executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             headless: headlessModus,
             args: ['--no-sandbox', '--lang=de-DE'],
         });
@@ -86,7 +86,7 @@ const instagram = {
             await instagram.page.waitFor(1000);
 
 
-            for (let i = 0; i < amount/tagList.length; i++) {
+            for (let i = 0; i < amount / tagList.length; i++) {
                 const URL = await instagram.page.url(); //.$('a.c-Yi7')
                 if (!URL.toString().startsWith("https://www.instagram.com/explore/tags/")) {
                     postURL = URL;
@@ -118,11 +118,19 @@ const instagram = {
                 let isLikeable = await instagram.page.$('span.glyphsSpriteHeart__outline__24__grey_9[aria-label="Gefällt mir"]'); //('span[aria-label="Gefällt mir"]');
 
                 if (isLikeable) {
-                    botsMessages("Post wird gelikt ♥ ");
                     console.log("LIKE");
+                    botsMessages("Post wird gelikt ♥ ");
                     await instagram.page.click('span.fr66n > button');//click the like button
-                    updateView('liked', ++liked);
 
+                    await instagram.page.waitFor(1500); //short waiting time
+
+                    let blocking = await instagram.page.$('div.RnEpo'); // blocking message
+                    if (blocking) {
+                        blocked = true;
+                        return;
+                    }
+
+                    updateView('liked', ++liked);
 
                     // div.kPFhm > div.KL4Bh > img    // foto einzel
                     const singlePic = 'div.kPFhm > div.KL4Bh > img'; // .src
@@ -155,8 +163,7 @@ const instagram = {
                     //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
 
-
-                    waitingTime = 20000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
+                    waitingTime = 25000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
 
                     await instagram.page.waitFor(1500); //short waiting time fot the BotMessage-Showtime
                     waitingTime -= 1500;
@@ -170,10 +177,13 @@ const instagram = {
                     waitingMessage = "Bereits gelikt. Next post... ";
                 }
 
-                if(i+1 == amount){
+                if (i + 1 == amount) {
                     console.log("FINISHED");
                     return;
                 }
+
+
+
 
                 botsMessages(waitingMessage, millisToSecond(waitingTime));
 
@@ -202,7 +212,11 @@ const instagram = {
 
     closeBrowser: async () => {
         console.log("Browser get closed.");
-        botsMessages("Fertig.", -1);
+        if (blocked) {
+            botsMessages("Die Handlungen werden von Instagram blockiert. Bot wird abbgebrochen. Zeit für eine Pause. Bitte versuche es später noch einmal.", -1);
+        } else {
+            botsMessages("Fertig.", -1);
+        }
 
         await instagram.browser.close();
 
@@ -262,7 +276,6 @@ const findPosts = async (postID, tag) => {
 };
 
 
-
 /* ------------- START ----------- */
 
 (async () => {
@@ -313,8 +326,6 @@ const findPosts = async (postID, tag) => {
 
     console.log("Insta Bot ist fertig!")
 })();
-
-
 
 
 /* ---- UTILITIES ---- */
