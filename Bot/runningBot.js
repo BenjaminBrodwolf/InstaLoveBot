@@ -11,7 +11,7 @@ let tags;
 let amount;
 let liked = 0;
 
-
+let waitingMessage = "Bot Loggt sich ein";
 
 
 const instagram = {
@@ -27,6 +27,7 @@ const instagram = {
             args: ['--no-sandbox', '--lang=de-DE'],
         });
 
+
         instagram.page = await instagram.browser.newPage();
 
         await instagram.page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
@@ -37,8 +38,10 @@ const instagram = {
     },
 
     login: async (username, password) => {
-        console.log("LOGIN")
-        await instagram.page.screenshot({path: './screenshot/login.jpg', type: 'jpeg'});
+        console.log("LOGIN");
+        botsMessages(waitingMessage);
+
+        // await instagram.page.screenshot({path: './screenshot/login.jpg', type: 'jpeg'});
 
         await instagram.page.waitForXPath('//a[contains(text(), "Melde dich an.")]');
         let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
@@ -57,7 +60,7 @@ const instagram = {
         await loginButton[0].click();
 
         await instagram.page.waitForNavigation();
-        await instagram.page.screenshot({path: './screenshot/loggedIN.jpg', type: 'jpeg'});
+        // await instagram.page.screenshot({path: './screenshot/loggedIN.jpg', type: 'jpeg'});
 
         let notNowClick = await instagram.page.$x('//button[contains(text(), "Jetzt nicht")]');
         if (notNowClick.length > 0) await notNowClick[0].click();
@@ -66,6 +69,7 @@ const instagram = {
 
     openByTagAndLike: async (tagList, amount, username) => {
         console.log("OPEN BY TAG");
+        botsMessages("Schaue nach Hashtag-Posts");
 
         let waitingTime = 0;
         let postURL;
@@ -75,7 +79,7 @@ const instagram = {
             await instagram.page.goto(TAG_URL(tag), {waitUntil: 'networkidle2'});
             await instagram.page.waitFor(1000);
 
-            await instagram.page.screenshot({path: './screenshot/openByTag.jpg', type: 'jpeg'});
+            // await instagram.page.screenshot({path: './screenshot/openByTag.jpg', type: 'jpeg'});
 
             let posts = await instagram.page.$$('article > div:nth-child(3) img[decoding="auto"]');
             await posts[0].click(); // click auf ersten Post
@@ -100,6 +104,8 @@ const instagram = {
                         await nextPost.click();
 
                     });
+                botsMessages("Post gefunden");
+
                 await instagram.page.waitFor(1000);
 
 
@@ -112,6 +118,7 @@ const instagram = {
                 let isLikeable = await instagram.page.$('span.glyphsSpriteHeart__outline__24__grey_9[aria-label="Gefällt mir"]'); //('span[aria-label="Gefällt mir"]');
 
                 if (isLikeable) {
+                    botsMessages("Post wird gelikt ♥ ");
                     console.log("LIKE");
                     await instagram.page.click('span.fr66n > button');//click the like button
                     updateView('liked', ++liked);
@@ -147,14 +154,28 @@ const instagram = {
                     // await like(postURL, tag, username)
                     //     .catch(e => console.log(" <<< FIREBASE ERROR >>>" + e.message));
 
+
+
                     waitingTime = 20000 + Math.floor(Math.random() * 6000);  // wait for 20 sec plus random amount of time.
+
+                    await instagram.page.waitFor(1500); //short waiting time fot the BotMessage-Showtime
+                    waitingTime -= 1500;
+                    waitingMessage = "Öffne nächsten Post in ";
 
                 } else {
                     console.log("ALREADY LIKED");
+
                     i--;
                     waitingTime = 1000 + Math.floor(Math.random() * 6000);
+                    waitingMessage = "Bereits gelikt. Next post... ";
                 }
 
+                if(i+1 == amount){
+                    console.log("FINISHED");
+                    return;
+                }
+
+                botsMessages(waitingMessage, millisToSecond(waitingTime));
 
                 console.log("BOT is waiting " + millisToSecond(waitingTime) + " second before next action.");
                 await instagram.page.waitFor(waitingTime);
@@ -181,6 +202,7 @@ const instagram = {
 
     closeBrowser: async () => {
         console.log("Browser get closed.");
+        botsMessages("Fertig.", -1);
 
         await instagram.browser.close();
 
@@ -244,6 +266,7 @@ const findPosts = async (postID, tag) => {
 /* ------------- START ----------- */
 
 (async () => {
+    console.log(" process.type: ", process.type)
 
     const data = await getUrlVars();
 

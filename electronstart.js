@@ -27,7 +27,9 @@ app.on('ready', () => {
         protocol: 'file',
         slashes: true
     }));
-    mainWindow.webContents.openDevTools();
+
+    mainWindow.maximize()
+    // mainWindow.webContents.openDevTools();
 
     //Build menu from template
     const mainMenu = Menu.buildFromTemplate(instagramMenuTemplate)
@@ -40,13 +42,18 @@ app.on('ready', () => {
 // eigenes Menu Template
 const instagramMenuTemplate = [
     {
-        label: 'File',
+        label: '♥',
         submenu: [
             {
-                label: 'Add Items'
+                label: 'Toggle DevTools,',
+                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I', //hier für Mac und Windows
+
+                click(item, focusedWindow){
+                    focusedWindow.toggleDevTools();
+                }
             },
             {
-                label: 'Clear Items'
+                role: 'reload'
             },
             {
                 label: 'Quit',
@@ -60,23 +67,23 @@ const instagramMenuTemplate = [
 ];
 
 
-if(process.env.NODE_ENV !== 'production'){
-    instagramMenuTemplate.push({
-        label: 'Developer Tools',
-        submenu: [
-            {
-                label: 'Toggle DevTools,',
-                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I', //hier für Mac und Windows
-
-                click(item, focusedWindow){
-                    focusedWindow.toggleDevTools();
-                }
-            },
-            {
-                role: 'reload'
-            }
-        ]
-    })
-}
+// if(process.env.NODE_ENV !== 'production'){
+//     instagramMenuTemplate.push({
+//         label: 'Developer Tools',
+//         submenu: [
+//             {
+//                 label: 'Toggle DevTools,',
+//                 accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I', //hier für Mac und Windows
+//
+//                 click(item, focusedWindow){
+//                     focusedWindow.toggleDevTools();
+//                 }
+//             },
+//             {
+//                 role: 'reload'
+//             }
+//         ]
+//     })
+// }
 
 

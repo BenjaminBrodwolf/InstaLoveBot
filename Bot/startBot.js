@@ -1,6 +1,9 @@
 const Store = require('electron-store');
 const store = new Store();
 
+console.log(" process.type: ", process.type)
+
+
 if (store.get('remember') === 'ON' ) {
     console.log("REMEBERER")
     document.getElementById('login').value = store.get('login');

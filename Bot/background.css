@@ -1,6 +1,8 @@
 html {
     margin: 0px;
     padding: 0px;
+    height: 100%;
+
 }
 
 body {
@@ -18,6 +20,7 @@ body {
 
     /*width: 100%;*/
     /*height: 100%;*/
+    height:  100vh;
 
     animation: bg-pan-right 8s infinite alternate both;
 
@@ -34,12 +37,14 @@ body {
 }
 
 .hearts {
+    margin: 0px;
+    padding: 0px;
     pointer-events: none;
     position: absolute;
     top: 0;
     left: 0;
     width: 90%;
-    height: 120%;
+    height:  120vh;
     overflow: hidden;
     z-index: -10000;
 }
@@ -55,7 +60,7 @@ body {
     height: 50px;
     /*background: rgba(255, 255, 255, 0.2);*/
     animation: animate 25s linear infinite;
-    bottom: -150px;
+    bottom: -190px;
 }
 .hearts li:nth-child(1){
     left: 25%;
@@ -103,7 +108,7 @@ body {
 }
 
 .hearts li:nth-child(7){
-    left: 35%;
+    left: 43%;
     width: 150px;
     height: 150px;
     animation-delay: 7s;
