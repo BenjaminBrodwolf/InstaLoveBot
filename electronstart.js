@@ -24,7 +24,7 @@ app.on('ready', () => {
         }
     });
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '/Bot/startBot.html'),
+        pathname: path.join(__dirname, '/Bot/HTML/startBot.html'),
         protocol: 'file',
         slashes: true
     }));
