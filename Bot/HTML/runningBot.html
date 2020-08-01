@@ -56,7 +56,7 @@
 
 <script>
 
-    function botsMessages(message, timeleft = 0) {
+    const botsMessages = (message, timeleft = 0) => {
         let countDonwTimer;
         try {
             document.getElementById("waitingMessage").textContent = message;
@@ -66,7 +66,7 @@
 
 
         if (timeleft > 0) {
-            countDonwTimer = setInterval(function () {
+            countDonwTimer = setInterval( () => {
                 timeleft--;
                 try {
                     document.getElementById("countdowntimer").textContent = timeleft;
@@ -89,8 +89,8 @@
         }
     }
 
-    function openURL(url) {
-        let shell = require('electron').shell;
+    const openURL = url => {
+        const shell = require('electron').shell;
         event.preventDefault();
         shell.openExternal(url);
     }
