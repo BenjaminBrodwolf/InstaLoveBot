@@ -1,15 +1,16 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
+const pjson = require('./package.json');
 
 const {app, BrowserWindow, Menu} = electron;
 
-let  mainWindow;
+let mainWindow;
 
 delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS;
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 
-const userDataPath = app.getPath ('userData');
+const userDataPath = app.getPath('userData');
 
 app.on('ready', () => {
 
@@ -48,7 +49,7 @@ const instagramMenuTemplate = [
                 label: 'Toggle DevTools,',
                 accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I', //hier für Mac und Windows
 
-                click(item, focusedWindow){
+                click(item, focusedWindow) {
                     focusedWindow.toggleDevTools();
                 }
             },
@@ -58,11 +59,14 @@ const instagramMenuTemplate = [
             {
                 label: 'Quit',
                 accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q', //hier für Mac und Windows
-                click(){
+                click() {
                     app.quit();
                 }
             }
         ]
+    },
+    {
+        label: 'V'+pjson.version
     }
 ];
 

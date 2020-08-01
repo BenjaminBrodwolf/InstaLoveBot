@@ -132,22 +132,32 @@ const instagram = {
 
                     updateView('liked', ++liked);
 
-                    // div.kPFhm > div.KL4Bh > img    // foto einzel
+
+                    //TODO DAMN PIC LOADING FAILS
+
+                    // $x('//div[contains(@role, "dialog")]')[0]
+                    // let insidePost = await instagram.page.$x('//div[contains(@role, "dialog")]');
+                    // console.log(insidePost);
+                    //
+                    // let newPic = "";
+                    // newPic = await instagram.page.$eval('//div[contains(@role, "dialog")]'); // s.getElementsByTagName('img')[1]
+                    // console.log(newPic);
+
                     const singlePic = 'div.kPFhm > div.KL4Bh > img'; // .src
                     const manyPics = 'div.eLAPa > div.KL4Bh > img'; // .src
                     const videoPic = 'div.GRtmf.wymO0 > div > video'; // .poster
 
                     let newPic = "";
-                    if (await instagram.page.$(singlePic)) {
-                        console.log("singlePic")
-                        newPic = await instagram.page.$eval(singlePic, el => el.src);
+                    if (await instagram.page.$(videoPic)) {
+                        console.log("videoPic")
+                        newPic = await instagram.page.$eval(videoPic, el => el.poster);
                     } else if (await instagram.page.$$(manyPics)) {
-                        console.log("firstPic")
+                        console.log("manyPics")
                         // const amountPics = await instagram.page.$$(manyPics).length;
                         newPic = await instagram.page.$$eval(manyPics, el => el[el.length - 2].src);
-                    } else if (await instagram.page.$(videoPic)) {
-                        console.log("VideoPic")
-                        newPic = await instagram.page.$eval(videoPic, el => el.poster);
+                    } else if (await instagram.page.$(singlePic)) {
+                        console.log("singlePic")
+                        newPic = await instagram.page.$eval(singlePic, el => el.src);
                     } else {
                         console.log("KEIN PIC GEFUNDEN!!!")
                     }
@@ -181,8 +191,6 @@ const instagram = {
                     console.log("FINISHED");
                     return;
                 }
-
-
 
 
                 botsMessages(waitingMessage, millisToSecond(waitingTime));
@@ -324,7 +332,7 @@ const findPosts = async (postID, tag) => {
 
     await instagram.closeBrowser();
 
-    console.log("Insta Bot ist fertig!")
+    console.log("Insta Bot is finished!")
 })();
 
 

@@ -90,8 +90,6 @@
     }
 
     function openURL(url) {
-        console.log(url);
-        console.log(typeof url);
         let shell = require('electron').shell;
         event.preventDefault();
         shell.openExternal(url);
