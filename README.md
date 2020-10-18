@@ -10,5 +10,5 @@ Let the bot do your work for you and share your love! :-)
 
 ### Liked Instagram-Posts depending on the Hastags
 
-  <img src="https://github.com/BenjaminBrodwolf/InstaLoveBot/blob/master/likedInstaPosts.png" width="450" title="CryptoSnake">
+  <img src="https://github.com/BenjaminBrodwolf/InstaLoveBot/blob/master/likedInstaPosts.png" width="450" title="Liked Instagram Posts">
 
