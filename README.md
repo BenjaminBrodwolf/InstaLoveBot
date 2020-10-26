@@ -8,9 +8,9 @@ Run ```npm start```
 
 ### Setup Start Screen
 
- <img src="https://github.com/BenjaminBrodwolf/InstaLoveBot/blob/master/repoImage.png" width="450" title="InstaLoveBote StartScreen">
+ <img src="https://github.com/BenjaminBrodwolf/InstaLoveBot/blob/master/repoImage.png" width="750" title="InstaLoveBote StartScreen">
 
 ### Liked Instagram-Posts depending on the Hastags
 
-  <img src="https://github.com/BenjaminBrodwolf/InstaLoveBot/blob/master/likedInstaPosts.png" width="450" title="Liked Instagram Posts">
+  <img src="https://github.com/BenjaminBrodwolf/InstaLoveBot/blob/master/likedInstaPosts.png" width="750" title="Liked Instagram Posts">
 
