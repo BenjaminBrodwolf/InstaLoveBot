@@ -37,26 +37,36 @@ const instagram = {
         await instagram.page.waitFor(2500);
     },
 
+    checkCookies: async () => {
+        console.log("Accept Cookies");
+
+        const cookies = await instagram.page.$$('body > div.RnEpo.Yx5HN > div > div > div > div.mt3GC > button.aOOlW.bIiDR');
+        if(cookies) await cookies[0].click();
+
+        await instagram.page.waitFor(500);
+    },
+
+
     login: async (username, password) => {
         console.log("LOGIN");
         botsMessages(waitingMessage);
 
         // await instagram.page.screenshot({path: './screenshot/login.jpg', type: 'jpeg'});
 
-        await instagram.page.waitForXPath('//a[contains(text(), "Melde dich an.")]');
-        let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
+        // await instagram.page.waitForXPath('//a[contains(text(), "Melde dich an.")]');
+        // let loginButton = await instagram.page.$x('//a[contains(text(), "Melde dich an.")]');
+        //
+        // /* Klicke Login */
+        // await loginButton[0].click();
 
-        /* Klicke Login */
-        await loginButton[0].click();
-
-        await instagram.page.waitFor(2000);
+        await instagram.page.waitFor(1000);
 
         /* Eingabe Username und Password */
         await instagram.page.type('input[name=username]', username, {delay: 50});
         await instagram.page.type('input[name=password]', password, {delay: 50});
 
         /*Klicke anmelden*/
-        loginButton = await instagram.page.$x('//div[contains(text(), "Anmelden")]');
+        const loginButton = await instagram.page.$x('//div[contains(text(), "Anmelden")]');
         await loginButton[0].click();
 
         await instagram.page.waitForNavigation();
@@ -94,7 +104,7 @@ const instagram = {
 
 
                 /* Warte bis Post geladen */
-                await instagram.page.waitFor('span[id="react-root"][aria-hidden="true"]')
+                await instagram.page.waitFor(1500) //'span[id="react-root"][aria-hidden="true"]'
                     .catch(async e => {
                         console.log('<<< ERROR OPENING POST >>> ' + e.message);
                         // await logError(e.message, tag, username)
@@ -115,7 +125,7 @@ const instagram = {
                 console.log(postURL);
 
 
-                let isLikeable = await instagram.page.$('span.glyphsSpriteHeart__outline__24__grey_9[aria-label="Gefällt mir"]'); //('span[aria-label="Gefällt mir"]');
+                let isLikeable = await instagram.page.$('button div span svg[fill="#262626"]'); //('span[aria-label="Gefällt mir"]');
 
                 if (isLikeable) {
                     console.log("LIKE");
@@ -163,10 +173,10 @@ const instagram = {
                     }
                     console.log(newPic);
 
-                    const userName = await instagram.page.$eval('div.e1e1d > h2 > a', el => el.text);
-                    const userPic = await instagram.page.$eval('img._6q-tv', el => el.src);
+                    const userName = await instagram.page.$eval('div.e1e1d > span > a', el => el.text);
+                    const userPic = await instagram.page.$eval(`a[href="/${userName}/"] img._6q-tv`, el => el.src);
                     const userComment = await instagram.page.$eval('div.C4VMK > span', el => el.innerHTML);
-                    const follow = await instagram.page.$('div.bY2yH > button', btn => btn.textContent);
+                    // const follow = await instagram.page.$('div.bY2yH > button', btn => btn.textContent);
 
                     addNewPost(newPic, userName, userPic, userComment, postURL);
                     // await like(postURL, tag, username)
@@ -325,6 +335,8 @@ const findPosts = async (postID, tag) => {
     // STARTING THE INSTAGRAM LIKE BOT PUPPETEER
 
     await instagram.openInstagram();
+
+    await instagram.checkCookies();
 
     await instagram.login(data.login, data.password);
 
